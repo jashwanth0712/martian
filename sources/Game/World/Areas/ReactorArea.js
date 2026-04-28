@@ -47,6 +47,7 @@ export class ReactorArea extends Area
             const boundingRef = this.references.items.get('zoneBounding')
             this.center = boundingRef ? boundingRef[0].position.clone() : new THREE.Vector3()
         }
+        this.center.y = 0
     }
 
     setCore()

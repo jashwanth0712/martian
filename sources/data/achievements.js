@@ -29,28 +29,10 @@ export default
         true // Unique
     ],
     [
-        'cookie',
-        'Wake & bake',
-        'Accept <strong>1</strong> cookies.',
+        'dishAntenna',
+        'Deep Space Contact',
+        'Visit the <strong>dish antenna</strong>.',
         1
-    ],
-    [
-        'cookie',
-        'Making some dough',
-        'Accept <strong>10</strong> cookies.',
-        10
-    ],
-    [
-        'cookie',
-        'So baked right now',
-        'Accept <strong>100</strong> cookies.',
-        100
-    ],
-    [
-        'cookie',
-        'Cookie Clicker',
-        'Accept <strong>1000</strong> cookies.',
-        1000
     ],
     [
         'whisper',

@@ -69,3 +69,4 @@ These are still active in the scene. Theming work needed.
 - Audit performed: 2026-04-26
 - Updated: 2026-04-28 — bowling area removed, pole light fireflies disabled, social area disabled
 - Updated: 2026-04-28 — Projects area replaced with Reactor (programmatic glowing reactor core, rotating rings, sparks, struts). Old GLB visuals hidden, physics disabled, new cylinder collider added. Achievement replaced with "Power Up". Future PR: Among Us-style interactive task.
+- Updated: 2026-04-28 — Cookie area replaced with Dish Antenna (DishAntennaArea.js). Programmatic parabolic reflector with yoke rotation, feed horn, tripod base, LEDs, equipment box. Old furnace/cookie/oven hidden. Map pointer renamed from "Cookie" to "Comms". Oven fire audio replaced with ambient hum. Cookie achievements (4) replaced with single "Deep Space Contact" visit achievement.

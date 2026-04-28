@@ -1,6 +1,6 @@
 import { Game } from '../../Game.js'
 import { AltarArea } from './AltarArea.js'
-import { CookieArea } from './CookieArea.js'
+import { DishAntennaArea } from './DishAntennaArea.js'
 import { LandingArea } from './LandingArea.js'
 import { ReactorArea } from './ReactorArea.js'
 import { LabArea } from './LabArea.js'
@@ -27,7 +27,7 @@ export class Areas
             // [ 'bowling', BowlingArea ], // Disabled for Mars theme
             [ 'career', CareerArea ],
             [ 'circuit', CircuitArea ],
-            [ 'cookie', CookieArea ],
+            [ 'cookie', DishAntennaArea ],
             [ 'lab', LabArea ],
             [ 'landing', LandingArea ],
             [ 'projects', ReactorArea ],

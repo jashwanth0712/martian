@@ -466,23 +466,18 @@ export class Audio
             }
         })
 
-        // Oven fire (Project Area + Cookie Area)
+        // Dish antenna ambient hum
         {
-            const positions = []
-            if(this.game.world.areas?.cookie)
-                positions.push(this.game.world.areas.cookie.references.items.get('spawner')[0].position)
-
-
-            if(positions.length)
+            if(this.game.world.areas?.cookie?.center)
             {
                 this.game.audio.register({
-                    group: 'ovenFire',
-                    path: 'sounds/fire/Mountain Audio - Fire Burning in a Wood Stove 1.mp3',
+                    group: 'dishHum',
+                    path: 'sounds/vehicle/energy/Energy_-_force_field_8_loop.mp3',
                     autoplay: true,
                     loop: true,
-                    volume: 0.8,
-                    positions: positions,
-                    distanceFade: 13,
+                    volume: 0.15,
+                    positions: [this.game.world.areas.cookie.center],
+                    distanceFade: 18,
                 })
             }
         }
