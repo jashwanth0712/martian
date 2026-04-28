@@ -21,6 +21,8 @@ These have been removed from the scene as part of the Mars conversion.
 | flowers | `Flowers` | Earth vegetation |
 | bricks | `Bricks` | Earth urban prop |
 | benches | `Benches` | Earth urban furniture |
+| bowling | `BowlingArea` | Earth recreation — removed from Areas.js, Map.js, achievements (2026-04-28) |
+| social | `SocialArea` | Social media statues/links — Earth-specific; disabled in Areas.js, Game.js, Map.js (2026-04-28) |
 
 ---
 
@@ -51,10 +53,10 @@ These are still active in the scene. Theming work needed.
 | snow | `Snow` | Reframe as CO2 frost / Martian ice deposits |
 | fences | `Fences` | Likely Earth-rural style — swap model for sci-fi/metal barriers |
 | explosiveCrates | `ExplosiveCrates` | Replace wooden crates with pressurized tanks/fuel containers |
-| poleLights | `PoleLights` | Remove firefly particles; keep lamp pole as Mars base lighting |
+| poleLights | `PoleLights` | Fireflies disabled; lamp poles kept as Mars base lighting ✓ |
 | lanterns | `Lanterns` | Replace with industrial indicator lights or warning beacons |
 | scenery | `Scenery` | Road shader is fine; 3D prop models need auditing |
-| areas | `Areas` | Rename zones (toilet → habitat, bowling → recreation, landing pad, etc.) |
+| areas | `Areas` | Rename zones (toilet → habitat, landing pad, etc.) — bowling & social removed |
 | whispers | `Whispers` | Replace flame beacon + country flags with comm beacon / colony ID |
 
 ---
@@ -65,3 +67,4 @@ These are still active in the scene. Theming work needed.
 - `snow` system can double as CO2 frost without major code changes
 - `lightnings` electrostatic discharge is scientifically valid on Mars (dust storm static)
 - Audit performed: 2026-04-26
+- Updated: 2026-04-28 — bowling area removed, pole light fireflies disabled, social area disabled

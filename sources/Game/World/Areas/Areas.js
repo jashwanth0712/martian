@@ -5,9 +5,9 @@ import { LandingArea } from './LandingArea.js'
 import { ProjectsArea } from './ProjectsArea.js'
 import { LabArea } from './LabArea.js'
 import { CareerArea } from './CareerArea.js'
-import { SocialArea } from './SocialArea.js'
+// import { SocialArea } from './SocialArea.js' // Disabled for Mars theme
 import { ToiletArea } from './ToiletArea.js'
-import { BowlingArea } from './BowlingArea.js'
+// import { BowlingArea } from './BowlingArea.js' // Disabled for Mars theme
 import { CircuitArea } from './CircuitArea.js'
 import { BehindTheSceneArea } from './BehindTheSceneArea.js'
 import { AchievementsArea } from './AchievementsArea.js'
@@ -24,14 +24,14 @@ export class Areas
             [ 'achievements', AchievementsArea ],
             [ 'altar', AltarArea ],
             [ 'behindTheScene', BehindTheSceneArea ],
-            [ 'bowling', BowlingArea ],
+            // [ 'bowling', BowlingArea ], // Disabled for Mars theme
             [ 'career', CareerArea ],
             [ 'circuit', CircuitArea ],
             [ 'cookie', CookieArea ],
             [ 'lab', LabArea ],
             [ 'landing', LandingArea ],
             [ 'projects', ProjectsArea ],
-            [ 'social', SocialArea ],
+            // [ 'social', SocialArea ], // Disabled for Mars theme
             [ 'toilet', ToiletArea ],
             [ 'timeMachine', TimeMachineArea ],
         ]

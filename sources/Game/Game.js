@@ -230,9 +230,9 @@ export class Game
             if(this.world.explosiveCrates)
                 this.world.explosiveCrates.reset()
 
-            // Bowling
-            if(this.world.areas.bowling)
-                this.world.areas.bowling.restart()
+            // Bowling - Disabled for Mars theme
+            // if(this.world.areas.bowling)
+            //     this.world.areas.bowling.restart()
 
             // Cookie
             if(this.world.areas.cookie)
@@ -242,12 +242,12 @@ export class Game
             if(this.world.areas.toilet)
                 this.world.areas.toilet.cabin.down = false
 
-            // Social
-            if(this.world.areas.social)
-            {
-                this.world.areas.social.statue.down = false
-                this.world.areas.social.fans.instancedGroup.needsUpdate = true
-            }
+            // Social — disabled for Mars theme
+            // if(this.world.areas.social)
+            // {
+            //     this.world.areas.social.statue.down = false
+            //     this.world.areas.social.fans.instancedGroup.needsUpdate = true
+            // }
             
             // Benches
             if(this.world.benches)

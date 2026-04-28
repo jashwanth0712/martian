@@ -41,7 +41,7 @@ export class PoleLights
         
         this.setPhysics()
         // this.setEmissives()
-        this.setFireflies()
+        // this.setFireflies() // Disabled for Mars theme - no fireflies on Mars
         this.setSwitchInterval()
     }
 

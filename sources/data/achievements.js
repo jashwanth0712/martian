@@ -13,7 +13,7 @@ export default
         'areas',
         'Traveler',
         'Vist every area.',
-        13,
+        12, // Was 13, reduced after removing bowling area for Mars theme
         true // Unique
     ],
     [
@@ -109,12 +109,13 @@ export default
         'Reach <strong>15 meters</strong> high.',
         15
     ],
-    [
-        'strike',
-        'F*** it, dude. Let\'s go bowling',
-        'Accomplished a strike.',
-        1
-    ],
+    // Bowling achievement disabled for Mars theme
+    // [
+    //     'strike',
+    //     'F*** it, dude. Let\'s go bowling',
+    //     'Accomplished a strike.',
+    //     1
+    // ],
     [
         'toiletDown',
         'Do not disturb',
