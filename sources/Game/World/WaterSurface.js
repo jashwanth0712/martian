@@ -222,6 +222,42 @@ export class WaterSurface
         }
 
         /**
+         * Glow (layered Perlin for organic hotspots)
+         */
+        const glowFrequencyA = uniform(0.08)
+        const glowFrequencyB = uniform(0.15)
+        const glowSpeed = uniform(0.015)
+
+        this.glowNode = Fn(() =>
+        {
+            const time = this.game.ticker.elapsedScaledUniform.mul(glowSpeed)
+
+            const noiseA = texture(
+                this.game.noises.perlin,
+                positionWorld.xz.mul(glowFrequencyA).add(time)
+            ).r
+
+            const noiseB = texture(
+                this.game.noises.perlin,
+                positionWorld.xz.mul(glowFrequencyB).add(time.mul(-0.7).add(0.5))
+            ).r
+
+            const combined = noiseA.mul(noiseB)
+            return combined.smoothstep(0.15, 0.45)
+        })
+
+        if(this.game.debug.active)
+        {
+            const glowDebugPanel = this.debugPanel.addFolder({
+                title: 'Glow',
+                expanded: true,
+            })
+            glowDebugPanel.addBinding(glowFrequencyA, 'value', { label: 'glowFreqA', min: 0.01, max: 0.3, step: 0.01 })
+            glowDebugPanel.addBinding(glowFrequencyB, 'value', { label: 'glowFreqB', min: 0.01, max: 0.5, step: 0.01 })
+            glowDebugPanel.addBinding(glowSpeed, 'value', { label: 'glowSpeed', min: 0, max: 0.1, step: 0.001 })
+        }
+
+        /**
          * Shore
          */
         const shoreEdge = uniform(0.17)
@@ -269,6 +305,31 @@ export class WaterSurface
         }
 
         /**
+         * Hotspots
+         */
+        const hotspotNoiseFrequency = uniform(0.07)
+        const hotspotScrollSpeed = uniform(0.008)
+
+        this.hotspotNode = Fn(() =>
+        {
+            const hotspotUv = positionWorld.xz.mul(hotspotNoiseFrequency).add(
+                this.game.ticker.elapsedScaledUniform.mul(hotspotScrollSpeed)
+            )
+            const noise = texture(this.game.noises.perlin, hotspotUv).r
+            return noise.remapClamp(0.55, 0.85, 0, 1)
+        })
+
+        if(this.game.debug.active)
+        {
+            const hotspotDebugPanel = this.debugPanel.addFolder({
+                title: 'Hotspots',
+                expanded: true,
+            })
+            hotspotDebugPanel.addBinding(hotspotNoiseFrequency, 'value', { label: 'hotspotNoiseFreq', min: 0, max: 0.3, step: 0.001 })
+            hotspotDebugPanel.addBinding(hotspotScrollSpeed, 'value', { label: 'hotspotScrollSpeed', min: 0, max: 0.05, step: 0.001 })
+        }
+
+        /**
          * Blur Output
          */
          const blurStrength = uniform(0.01)
@@ -298,11 +359,22 @@ export class WaterSurface
 
     setMaterial()
     {
-        // Lava surface: dark molten base with bright veins at ripple/shore areas
-        const lavaBase = color(0x8B1A00)
-        const lavaHighlight = color(0xff4400)
+        const lavaCrust = color(0x1a0800)
+        const lavaOrange = color(0xd94000)
+        const lavaHot = color(0xff6a00)
+        const lavaYellow = color(0xffaa22)
+
         const lavaMask = this.detailsMask()
-        const lavaColor = mix(lavaBase, lavaHighlight, lavaMask)
+        const hotspotMask = this.hotspotNode()
+        const glowMask = this.glowNode()
+
+        const lavaColor = Fn(() =>
+        {
+            const baseColor = mix(lavaCrust, lavaOrange, lavaMask).toVar()
+            baseColor.assign(mix(baseColor, lavaHot, glowMask))
+            baseColor.assign(mix(baseColor, lavaYellow, hotspotMask.mul(glowMask)))
+            return baseColor
+        })()
 
         const material = new MeshDefaultMaterial({
             depthWrite: true,
@@ -317,18 +389,14 @@ export class WaterSurface
             transparent: false
         })
 
-        // No blur pass needed — lava is fully opaque
         material.maskShadowNode = float(0)
 
-        // Already exist
         if(this.material)
         {
             this.material.dispose()
             this.material = material
             this.mesh.material = this.material
         }
-
-        // Don't exist yet
         else
         {
             this.material = material

@@ -28,6 +28,7 @@ import { Lanterns } from './Lanterns.js'
 import { Fences } from './Fences.js'
 import { Benches } from './Benches.js'
 import { Scenery } from './Scenery.js'
+import { LavaSmoke } from './LavaSmoke.js'
 
 export class World
 {
@@ -56,6 +57,7 @@ export class World
             this.visualVehicle = new VisualVehicle(this.game.resources.vehicle.scene)
             this.floor = new Floor()
             this.waterSurface = new WaterSurface()
+            this.lavaSmoke = new LavaSmoke()
             this.grass = new Grass()
             this.windLines = new WindLines()
             this.confetti = new Confetti()
