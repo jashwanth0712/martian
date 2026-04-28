@@ -37,6 +37,9 @@ export class VisualVehicle
 
     destroy()
     {
+        if(this.burstCountdown?.parentNode)
+            this.burstCountdown.parentNode.removeChild(this.burstCountdown)
+
         this.game.ticker.events.off('tick', this.tickCallback)
 
         if(this.blinkers)
@@ -479,6 +482,10 @@ export class VisualVehicle
     setScreenPosition()
     {
         this.screenPosition = new THREE.Vector2(0, 0)
+
+        this.burstCountdown = document.createElement('div')
+        this.burstCountdown.style.cssText = 'position:fixed;pointer-events:none;display:none;transform:translate(-50%,-120%);background:rgba(0,0,0,0.65);color:#ff6b35;font-size:14px;font-family:"Nunito",monospace;padding:3px 8px;border-radius:4px;z-index:1000;font-weight:700;'
+        this.game.domElement.appendChild(this.burstCountdown)
     }
 
     update()
@@ -609,5 +616,19 @@ export class VisualVehicle
 
         this.screenPosition.x = (vector.x * 0.5 + 0.5)
         this.screenPosition.y = (vector.y * -0.5 + 0.5)
+
+        const player = this.game.player
+        if(player.activeBurst !== null && player.burstTimeLeft > 0)
+        {
+            const ms = Math.ceil(player.burstTimeLeft * 1000)
+            this.burstCountdown.textContent = `${ms}ms`
+            this.burstCountdown.style.display = 'block'
+            this.burstCountdown.style.left = `${this.screenPosition.x * this.game.viewport.width}px`
+            this.burstCountdown.style.top = `${this.screenPosition.y * this.game.viewport.height}px`
+        }
+        else
+        {
+            this.burstCountdown.style.display = 'none'
+        }
     }
 }

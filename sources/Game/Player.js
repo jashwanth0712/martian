@@ -21,6 +21,12 @@ export class Player
         this.braking = 0
         this.suspensions = ['low', 'low', 'low', 'low']
 
+        this.activeBurst = null
+        this.burstTimeLeft = 0
+        this.burstDuration = 0.5
+        this._burstAccel = 0
+        this._burstSteer = 0
+
         const respawn = this.game.respawns.getDefault()
 
         this.position = respawn.position.clone()
@@ -218,10 +224,10 @@ export class Player
     setInputs()
     {
         this.game.inputs.addActions([
-            { name: 'forward',               categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowUp', 'Keyboard.KeyW', 'Gamepad.up', 'Gamepad.r2' ] },
-            { name: 'right',                 categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowRight', 'Keyboard.KeyD', 'Gamepad.right' ] },
-            { name: 'backward',              categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowDown', 'Keyboard.KeyS', 'Gamepad.down', 'Gamepad.l2' ] },
-            { name: 'left',                  categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowLeft', 'Keyboard.KeyA', 'Gamepad.left' ] },
+            { name: 'forward',               categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowUp', 'Gamepad.up', 'Gamepad.r2' ] },
+            { name: 'right',                 categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowRight', 'Gamepad.right' ] },
+            { name: 'backward',              categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowDown', 'Gamepad.down', 'Gamepad.l2' ] },
+            { name: 'left',                  categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.ArrowLeft', 'Gamepad.left' ] },
             { name: 'boost',                 categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.ShiftLeft', 'Keyboard.ShiftRight', 'Gamepad.circle' ] },
             { name: 'brake',                 categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.KeyB', 'Keyboard.ControlLeft', 'Gamepad.square' ] },
             { name: 'respawn',               categories: [ 'wandering',                       ], keys: [ 'Keyboard.KeyR', 'Gamepad.select' ] },
@@ -234,8 +240,14 @@ export class Player
             { name: 'suspensionsFrontRight', categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.Numpad9', 'Keyboard.Digit3' ] },
             { name: 'suspensionsBackRight',  categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.Numpad3', 'Keyboard.Digit4' ] },
             { name: 'suspensionsBackLeft',   categories: [ 'wandering', 'racing'              ], keys: [ 'Keyboard.Numpad1', 'Keyboard.Digit1' ] },
-            { name: 'interact',              categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.Enter', 'Keyboard.KeyE', 'Keyboard.KeyF', 'Gamepad.cross' ] },
+            { name: 'interact',              categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.Enter', 'Keyboard.KeyE', 'Gamepad.cross' ] },
             { name: 'honk',                  categories: [ 'wandering', 'racing', 'cinematic' ], keys: [ 'Keyboard.KeyH', 'Gamepad.l3' ] },
+            { name: 'burstForward',          categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyA' ] },
+            { name: 'burstBackward',         categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyS' ] },
+            { name: 'burstFrontRight',       categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyD' ] },
+            { name: 'burstFrontLeft',        categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyF' ] },
+            { name: 'burstBackLeft',         categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyZ' ] },
+            { name: 'burstBackRight',        categories: [ 'wandering', 'racing' ],              keys: [ 'Keyboard.KeyX' ] },
         ])
 
         // Respawn
@@ -256,6 +268,33 @@ export class Player
             if(action.active)
                 this.honk()
         })
+
+        // Burst actions
+        const burstDefs = {
+            burstForward:    { accel:  1, steer:  0 },
+            burstBackward:   { accel: -1, steer:  0 },
+            burstFrontRight: { accel:  1, steer: -1 },
+            burstFrontLeft:  { accel:  1, steer:  1 },
+            burstBackLeft:   { accel: -1, steer:  1 },
+            burstBackRight:  { accel: -1, steer: -1 },
+        }
+        for(const [name, def] of Object.entries(burstDefs))
+        {
+            this.game.inputs.events.on(name, (action) =>
+            {
+                if(!action.active)
+                    return
+                if(this.activeBurst !== null)
+                    return
+                if(this.state !== Player.STATE_DEFAULT)
+                    return
+
+                this.activeBurst = name
+                this.burstTimeLeft = this.burstDuration
+                this._burstAccel = def.accel
+                this._burstSteer = def.steer
+            })
+        }
 
         // Suspensions
         const suspensionsUpdate = () =>
@@ -594,6 +633,24 @@ export class Player
             {
                 this.accelerating *= -1
                 this.steering *= -1
+            }
+        }
+
+        if(this.activeBurst !== null)
+        {
+            this.burstTimeLeft -= this.game.ticker.delta
+
+            if(this.burstTimeLeft <= 0)
+            {
+                this.activeBurst = null
+                this.burstTimeLeft = 0
+                this.accelerating = 0
+                this.steering = 0
+            }
+            else
+            {
+                this.accelerating = this._burstAccel
+                this.steering = this._burstSteer
             }
         }
     }
