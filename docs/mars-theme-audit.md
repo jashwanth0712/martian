@@ -56,7 +56,7 @@ These are still active in the scene. Theming work needed.
 | poleLights | `PoleLights` | Fireflies disabled; lamp poles kept as Mars base lighting ✓ |
 | lanterns | `Lanterns` | Replace with industrial indicator lights or warning beacons |
 | scenery | `Scenery` | Road shader is fine; 3D prop models need auditing |
-| areas | `Areas` | Rename zones (toilet → habitat, landing pad, etc.) — bowling & social removed |
+| areas | `Areas` | Rename zones (toilet → habitat, landing pad, etc.) — bowling, social & projects removed; projects replaced with Reactor |
 | whispers | `Whispers` | Replace flame beacon + country flags with comm beacon / colony ID |
 
 ---
@@ -68,3 +68,4 @@ These are still active in the scene. Theming work needed.
 - `lightnings` electrostatic discharge is scientifically valid on Mars (dust storm static)
 - Audit performed: 2026-04-26
 - Updated: 2026-04-28 — bowling area removed, pole light fireflies disabled, social area disabled
+- Updated: 2026-04-28 — Projects area replaced with Reactor (programmatic glowing reactor core, rotating rings, sparks, struts). Old GLB visuals hidden, physics disabled, new cylinder collider added. Achievement replaced with "Power Up". Future PR: Among Us-style interactive task.

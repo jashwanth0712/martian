@@ -2,7 +2,7 @@ import { Game } from '../../Game.js'
 import { AltarArea } from './AltarArea.js'
 import { CookieArea } from './CookieArea.js'
 import { LandingArea } from './LandingArea.js'
-import { ProjectsArea } from './ProjectsArea.js'
+import { ReactorArea } from './ReactorArea.js'
 import { LabArea } from './LabArea.js'
 import { CareerArea } from './CareerArea.js'
 // import { SocialArea } from './SocialArea.js' // Disabled for Mars theme
@@ -30,7 +30,7 @@ export class Areas
             [ 'cookie', CookieArea ],
             [ 'lab', LabArea ],
             [ 'landing', LandingArea ],
-            [ 'projects', ProjectsArea ],
+            [ 'projects', ReactorArea ],
             // [ 'social', SocialArea ], // Disabled for Mars theme
             [ 'toilet', ToiletArea ],
             [ 'timeMachine', TimeMachineArea ],

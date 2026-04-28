@@ -1,5 +1,4 @@
 import labData from './lab.js'
-import projectsData from './projects.js'
 
 export default
 [
@@ -17,11 +16,10 @@ export default
         true // Unique
     ],
     [
-        'projects',
-        'But can you fix the wifi?',
-        'Check every project in the <strong>projects</strong> area.',
-        projectsData.length,
-        true // Unique
+        'reactor',
+        'Power Up',
+        'Visit the <strong>reactor</strong> core.',
+        1
     ],
     [
         'lab',

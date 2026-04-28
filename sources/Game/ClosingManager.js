@@ -4,7 +4,6 @@ import { Menu } from './Menu.js'
 import { Modals } from './Modals.js'
 import { CircuitArea } from './World/Areas/CircuitArea.js'
 import { LabArea } from './World/Areas/LabArea.js'
-import { ProjectsArea } from './World/Areas/ProjectsArea.js'
 
 export class ClosingManager
 {
@@ -41,10 +40,6 @@ export class ClosingManager
                 // Circuit running
                 else if(this.game.world.areas?.circuit?.state === CircuitArea.STATE_RUNNING || this.game.world.areas?.circuit?.state === CircuitArea.STATE_STARTING)
                     this.game.menu.open('circuit')
-
-                // Projects => Close
-                else if(this.game.world.areas?.projects && (this.game.world.areas?.projects.state === ProjectsArea.STATE_OPEN || this.game.world.areas?.projects.state === ProjectsArea.STATE_OPENING))
-                    this.game.world.areas.projects.close()
 
                 // Lab => Close
                 else if(this.game.world.areas?.lab && (this.game.world.areas?.lab.state === LabArea.STATE_OPEN || this.game.world.areas?.lab.state === LabArea.STATE_OPENING))

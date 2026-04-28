@@ -35,6 +35,10 @@ export class Respawns
 
             this.items.set(name, item)
         }
+
+        // Alias: reactor → projects respawn point (Mars theme rename)
+        if(this.items.has('projects'))
+            this.items.set('reactor', this.items.get('projects'))
     }
 
     getByName(name)
