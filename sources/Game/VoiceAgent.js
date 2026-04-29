@@ -16,6 +16,7 @@ export class VoiceAgent
         this.game = game
         this.conversation = null
         this.status = 'idle'
+        this.micOpen = false
 
         this.createUI()
     }
@@ -51,7 +52,22 @@ export class VoiceAgent
             backdropFilter: 'blur(4px)',
         })
 
-        this.button.addEventListener('click', () => this.toggle())
+        this.button.addEventListener('mousedown', (e) => { e.preventDefault(); this.pushToTalk(true) })
+        this.button.addEventListener('mouseup', () => this.pushToTalk(false))
+        this.button.addEventListener('mouseleave', () => { if(this.micOpen) this.pushToTalk(false) })
+        this.button.addEventListener('touchstart', (e) => { e.preventDefault(); this.pushToTalk(true) })
+        this.button.addEventListener('touchend', () => this.pushToTalk(false))
+        this.button.addEventListener('touchcancel', () => this.pushToTalk(false))
+
+        document.addEventListener('keydown', (e) =>
+        {
+            if(e.code === 'KeyM' && !e.repeat) this.pushToTalk(true)
+        })
+        document.addEventListener('keyup', (e) =>
+        {
+            if(e.code === 'KeyM') this.pushToTalk(false)
+        })
+
         document.body.appendChild(this.button)
 
         this.statusLabel = document.createElement('div')
@@ -105,17 +121,33 @@ export class VoiceAgent
             this.button.style.color = '#ff6b35'
             this.button.style.background = 'rgba(20, 15, 10, 0.85)'
             this.button.style.animation = ''
-            this.statusLabel.textContent = 'CONNECTED'
+            this.statusLabel.textContent = 'HOLD TO TALK (M)'
             this.statusLabel.style.display = 'block'
         }
     }
 
-    async toggle()
+    async pushToTalk(pressed)
     {
-        if(this.conversation)
-            await this.endSession()
-        else
+        if(!this.conversation && pressed)
+        {
             await this.startSession()
+            return
+        }
+
+        if(!this.conversation) return
+
+        this.micOpen = pressed
+        this.conversation.setMicMuted(!pressed)
+
+        if(pressed)
+        {
+            this.status = 'listening'
+        }
+        else
+        {
+            this.status = 'connected'
+        }
+        this.updateUI()
     }
 
     async startSession()
@@ -159,6 +191,8 @@ export class VoiceAgent
                 },
             })
 
+            this.conversation.setMicMuted(true)
+            this.micOpen = false
             this.status = 'connected'
             this.updateUI()
         }
@@ -210,6 +244,7 @@ export class VoiceAgent
             await this.conversation.endSession()
             this.conversation = null
         }
+        this.micOpen = false
         this.status = 'idle'
         this.updateUI()
     }
