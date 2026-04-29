@@ -56,8 +56,7 @@ export class CircuitArea extends Area
         this.setData()
         this.setAchievement()
 
-        this.game.materials.getFromName('circuitBrand').map.minFilter = THREE.LinearFilter
-        this.game.materials.getFromName('circuitBrand').map.magFilter = THREE.LinearFilter
+        // circuitBrand material replaced by Mars mission banners in setBanners()
     }
 
     setSounds()
@@ -784,6 +783,45 @@ export class CircuitArea extends Area
     setBanners()
     {
         this.banners = this.references.items.get('banners')
+
+        const labels = ['ARES-1', 'SOL ZERO', 'JEZERO BASE']
+
+        let labelIndex = 0
+        for(const banner of this.banners)
+        {
+            const label = labels[labelIndex % labels.length]
+
+            const canvas = document.createElement('canvas')
+            canvas.width = 256
+            canvas.height = 128
+            const ctx = canvas.getContext('2d')
+
+            ctx.fillStyle = '#2B1A0E'
+            ctx.fillRect(0, 0, 256, 128)
+
+            ctx.fillStyle = '#E8C88A'
+            ctx.font = 'bold 32px sans-serif'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.fillText(label, 128, 64)
+
+            const tex = new THREE.CanvasTexture(canvas)
+            tex.minFilter = THREE.LinearFilter
+            tex.magFilter = THREE.LinearFilter
+            tex.colorSpace = THREE.SRGBColorSpace
+
+            banner.traverse((child) =>
+            {
+                if(child.isMesh)
+                {
+                    child.material = child.material.clone()
+                    child.material.map = tex
+                    child.material.needsUpdate = true
+                }
+            })
+
+            labelIndex++
+        }
     }
 
     setLeaderboard()

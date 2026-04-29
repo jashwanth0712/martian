@@ -37,8 +37,8 @@ export class VisualVehicle
 
     destroy()
     {
-        if(this.burstCountdown?.parentNode)
-            this.burstCountdown.parentNode.removeChild(this.burstCountdown)
+        if(this.burstBar?.parentNode)
+            this.burstBar.parentNode.removeChild(this.burstBar)
 
         this.game.ticker.events.off('tick', this.tickCallback)
 
@@ -483,9 +483,22 @@ export class VisualVehicle
     {
         this.screenPosition = new THREE.Vector2(0, 0)
 
-        this.burstCountdown = document.createElement('div')
-        this.burstCountdown.style.cssText = 'position:fixed;pointer-events:none;display:none;transform:translate(-50%,-120%);background:rgba(0,0,0,0.65);color:#ff6b35;font-size:14px;font-family:"Nunito",monospace;padding:3px 8px;border-radius:4px;z-index:1000;font-weight:700;'
-        this.game.domElement.appendChild(this.burstCountdown)
+        this.burstColors = {
+            burstForward:    '#ff6b35',
+            burstBackward:   '#c23616',
+            burstFrontRight: '#e1b12c',
+            burstFrontLeft:  '#44bd32',
+            burstBackLeft:   '#0097e6',
+            burstBackRight:  '#8c7ae6',
+        }
+
+        this.burstBar = document.createElement('div')
+        this.burstBar.style.cssText = 'position:fixed;pointer-events:none;display:none;transform:translate(-50%,-120%);z-index:1000;width:120px;height:8px;background:rgba(0,0,0,0.5);border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);'
+        this.game.domElement.appendChild(this.burstBar)
+
+        this.burstBarFill = document.createElement('div')
+        this.burstBarFill.style.cssText = 'width:100%;height:100%;border-radius:3px;transition:none;'
+        this.burstBar.appendChild(this.burstBarFill)
     }
 
     update()
@@ -620,15 +633,18 @@ export class VisualVehicle
         const player = this.game.player
         if(player.activeBurst !== null && player.burstTimeLeft > 0)
         {
-            const ms = Math.ceil(player.burstTimeLeft * 1000)
-            this.burstCountdown.textContent = `${ms}ms`
-            this.burstCountdown.style.display = 'block'
-            this.burstCountdown.style.left = `${this.screenPosition.x * this.game.viewport.width}px`
-            this.burstCountdown.style.top = `${this.screenPosition.y * this.game.viewport.height}px`
+            const progress = player.burstTimeLeft / player.burstDuration
+            const burstColor = this.burstColors[player.activeBurst] || '#ff6b35'
+            this.burstBarFill.style.width = `${progress * 100}%`
+            this.burstBarFill.style.background = burstColor
+            this.burstBarFill.style.boxShadow = `0 0 6px ${burstColor}`
+            this.burstBar.style.display = 'block'
+            this.burstBar.style.left = `${this.screenPosition.x * this.game.viewport.width}px`
+            this.burstBar.style.top = `${this.screenPosition.y * this.game.viewport.height}px`
         }
         else
         {
-            this.burstCountdown.style.display = 'none'
+            this.burstBar.style.display = 'none'
         }
     }
 }

@@ -188,8 +188,8 @@ export default
     ],
     [
         'reset',
-        'Clean your room',
-        'Put back everything as it was.',
+        'Mission Reset',
+        'Restore all systems to launch configuration.',
         1
     ],
     [

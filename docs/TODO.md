@@ -1,0 +1,5 @@
+- Get voice to voice conversations
+- set few traps which are timebound
+- record videos of us playing through the timebound traps 
+- make a trailer video 
+- have auth and deploy

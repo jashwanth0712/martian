@@ -1,0 +1,9 @@
+{
+    "agents": [
+        {
+            "name": "Mars Rover Copilot",
+            "config": "agent_configs/mars-rover-copilot.json",
+            "id": "agent_6401kqbcdv86f2r9h1k5wwgj0ega"
+        }
+    ]
+}
