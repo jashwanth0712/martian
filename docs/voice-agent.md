@@ -9,17 +9,31 @@ The agent speaks in radio/walkie-talkie style: "Copy that. Forward two clicks. O
 ## How It Works
 
 ```
-Player speaks → ElevenLabs STT → GPT-4.1 Mini parses command → calls execute_movement client tool
+Player holds mic → ElevenLabs STT → GPT-4.1 Mini parses command → calls execute_movement client tool
 → Client tool queues burst sequence on Player instance → Agent speaks confirmation
 ```
 
-1. Player clicks the mic button (bottom-left corner)
-2. ElevenLabs opens a WebSocket session with STT + TTS
-3. Player says e.g. "Move forward 2 meters then turn right"
-4. The LLM parses this into `[{direction: "forward", count: 2}, {direction: "front_right", count: 1}]`
-5. The `execute_movement` client tool runs in the browser, directly setting Player burst state
-6. Each burst executes for 500ms with a 20ms buffer between bursts
-7. The agent confirms: "Roger. Forward two, right one. Executing. Over."
+1. Player clicks the mic button (bottom-left corner) to connect the session
+2. ElevenLabs opens a WebSocket session with STT + TTS; mic starts **muted**
+3. Player **holds** the mic button or **holds M key** to unmute (push-to-talk)
+4. Player says e.g. "Move forward 2 meters then turn right"
+5. Player **releases** button/key — mic mutes again
+6. The LLM parses this into `[{direction: "forward", count: 2}, {direction: "front_right", count: 1}]`
+7. The `execute_movement` client tool runs in the browser, directly setting Player burst state
+8. Each burst executes for 500ms with a 20ms buffer between bursts
+9. The agent confirms: "Roger. Forward two, right one. Executing. Over."
+
+## Push-to-Talk
+
+The mic uses **push-to-talk** to prevent accidental audio pickup during gameplay.
+
+- **First click/press**: Connects the ElevenLabs session (mic starts muted)
+- **Hold button or hold M key**: Unmutes mic — status shows "LISTENING..."
+- **Release**: Mutes mic — status shows "HOLD TO TALK (M)"
+- **Mouse leave** also mutes (prevents stuck-open mic if cursor leaves button)
+- Touch events supported for mobile (touchstart/touchend/touchcancel)
+
+Implementation: Uses `conversation.setMicMuted(boolean)` from the ElevenLabs SDK (`@elevenlabs/client`). The mic is muted immediately after `Conversation.startSession()` completes.
 
 ## Setup
 
@@ -76,10 +90,10 @@ Returns `{ success: true, bursts_executed: N }` to the agent for confirmation.
 ## UI States
 
 The mic button in the bottom-left corner shows:
-- **Idle**: grey border, grey icon
-- **Connected**: orange border
-- **Listening**: pulsing orange glow
-- **Speaking**: solid orange background, white icon
+- **Idle/Disconnected**: grey border, grey icon — click to connect
+- **Connected (mic muted)**: orange border, label "HOLD TO TALK (M)"
+- **Listening (mic open)**: pulsing orange glow, label "LISTENING..."
+- **Speaking**: solid orange background, white icon, label "COPILOT SPEAKING"
 
 ## Important Notes
 
@@ -88,3 +102,6 @@ The mic button in the bottom-left corner shows:
 - Max 10 bursts per step to prevent runaway commands
 - The `waitForBurstClear` polling (50ms interval) handles edge cases where timing drifts
 - Requires HTTPS in production (microphone access needs secure context)
+- Push-to-talk uses `setMicMuted()` from the ElevenLabs SDK — the session stays open while mic toggles
+- M key uses `keydown`/`keyup` with `!e.repeat` guard to prevent key-repeat from toggling rapidly
+- The agent can still speak (TTS output) even when the player's mic is muted

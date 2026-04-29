@@ -1,4 +1,4 @@
-- Get voice to voice conversations
+- [x] Get voice to voice conversations (push-to-talk, ElevenLabs copilot)
 - set few traps which are timebound
 - record videos of us playing through the timebound traps 
 - make a trailer video 
