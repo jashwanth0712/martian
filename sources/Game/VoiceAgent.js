@@ -61,11 +61,11 @@ export class VoiceAgent
 
         document.addEventListener('keydown', (e) =>
         {
-            if(e.code === 'KeyM' && !e.repeat) this.pushToTalk(true)
+            if(e.code === 'KeyN' && !e.repeat) this.pushToTalk(true)
         })
         document.addEventListener('keyup', (e) =>
         {
-            if(e.code === 'KeyM') this.pushToTalk(false)
+            if(e.code === 'KeyN') this.pushToTalk(false)
         })
 
         document.body.appendChild(this.button)
@@ -121,7 +121,7 @@ export class VoiceAgent
             this.button.style.color = '#ff6b35'
             this.button.style.background = 'rgba(20, 15, 10, 0.85)'
             this.button.style.animation = ''
-            this.statusLabel.textContent = 'HOLD TO TALK (M)'
+            this.statusLabel.textContent = 'HOLD TO TALK (N)'
             this.statusLabel.style.display = 'block'
         }
     }
@@ -130,7 +130,9 @@ export class VoiceAgent
     {
         if(!this.conversation && pressed)
         {
+            this._connectingFromPress = true
             await this.startSession()
+            this._connectingFromPress = false
             return
         }
 
@@ -143,7 +145,7 @@ export class VoiceAgent
         {
             this.status = 'listening'
         }
-        else
+        else if(this.status !== 'speaking')
         {
             this.status = 'connected'
         }
@@ -174,8 +176,13 @@ export class VoiceAgent
                 },
                 onStatusChange: ({ status }) =>
                 {
-                    this.status = status
-                    this.updateUI()
+                    if(status === 'disconnected')
+                    {
+                        this.conversation = null
+                        this.micOpen = false
+                        this.status = 'disconnected'
+                        this.updateUI()
+                    }
                 },
                 onError: (error) =>
                 {
@@ -183,11 +190,21 @@ export class VoiceAgent
                 },
                 onModeChange: ({ mode }) =>
                 {
-                    if(mode === 'listening')
-                        this.status = 'listening'
-                    else if(mode === 'speaking')
+                    if(mode === 'speaking')
+                    {
                         this.status = 'speaking'
-                    this.updateUI()
+                        this.updateUI()
+                    }
+                    else if(mode === 'listening' && this.micOpen)
+                    {
+                        this.status = 'listening'
+                        this.updateUI()
+                    }
+                    else if(mode === 'listening' && !this.micOpen)
+                    {
+                        this.status = 'connected'
+                        this.updateUI()
+                    }
                 },
             })
 

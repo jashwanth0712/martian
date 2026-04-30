@@ -29,6 +29,7 @@ import { Fences } from './Fences.js'
 import { Benches } from './Benches.js'
 import { Scenery } from './Scenery.js'
 import { LavaSmoke } from './LavaSmoke.js'
+import { FireTornadoes } from './FireTornadoes.js'
 
 export class World
 {
@@ -67,6 +68,7 @@ export class World
             this.fireballs = new Fireballs()
             this.snow = new Snow()
             this.visualTornado = new VisualTornado()
+            this.fireTornadoes = new FireTornadoes()
             // this.bushes = new Bushes()
             // this.birchTrees = new Trees('Birch Tree', this.game.resources.birchTreesVisualModel.scene, this.game.resources.birchTreesReferencesModel.scene.children, '#ff4f2b', '#ff903f')
             // this.oakTrees = new Trees('Oak Tree', this.game.resources.oakTreesVisualModel.scene, this.game.resources.oakTreesReferencesModel.scene.children, '#b4b536', '#d8cf3b')
